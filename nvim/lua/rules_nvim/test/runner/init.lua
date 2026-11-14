@@ -3,8 +3,8 @@
 ---@type string[]
 local spec_files = arg
 
-local test_suite = require('rules_nvim_test.suite')
-local rlocation = require('rlocation')
+local test_suite = require('rules_nvim.test.suite')
+local rlocation = require('rules_nvim.rlocation')
 
 local function get_env()
   local env = {
@@ -14,7 +14,7 @@ local function get_env()
     teardown = test_suite.teardown,
     before_each = test_suite.before_each,
     after_each = test_suite.after_each,
-    assert = require('rules_nvim_test.suite.assert'),
+    assert = require('rules_nvim.test.suite.assert'),
   }
   return setmetatable(env, { __index = _G })
 end
@@ -43,12 +43,12 @@ end
 ---@param test rules_nvim_lua.TestSuite
 ---@return rules_nvim_lua.TestStats
 local function run_test_suite(test, level)
-  local TestStats = require('rules_nvim_test.suite.test_stats')
+  local TestStats = require('rules_nvim.test.suite.test_stats')
 
   ---@type rules_nvim_lua.TestStats
   local test_stats = TestStats.new()
 
-  local AssertionError = require('rules_nvim_test.suite.assertion_error')
+  local AssertionError = require('rules_nvim.test.suite.assertion_error')
   vim.print(get_description(test, level))
 
   if test.setup ~= nil then
@@ -94,7 +94,7 @@ local function run_test_suite(test, level)
   return test_stats
 end
 
-local TestStats = require('rules_nvim_test.suite.test_stats')
+local TestStats = require('rules_nvim.test.suite.test_stats')
 local total_stats = vim
   .iter(test_suite.top_level_test_suites)
   :fold(TestStats.new(), function(acc_test_stats, test)

@@ -1,4 +1,4 @@
-local rlocation = require('rlocation')
+local rlocation = require('rules_nvim.rlocation')
 local data = rlocation.rlocation("_main/nvim/tests/basic_nvim_lua_binary/data.txt")
 local lines = vim.fn.readfile(data)
 

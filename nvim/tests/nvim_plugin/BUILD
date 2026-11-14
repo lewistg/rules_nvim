@@ -14,6 +14,6 @@ nvim_lua_test(
         ":nvim_env",
     ],
     deps = [
-        "//nvim/lua/nvim_environment",
+        "//nvim/lua/rules_nvim/nvim_environment",
     ],
 )

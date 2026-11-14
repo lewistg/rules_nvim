@@ -7,7 +7,7 @@ function M.set_up_nvim_environment(nvim_environment_target_name)
   -- definition (see nvim_environment.bzl)
   local runfile_dir = 'nvim_environment_' .. nvim_environment_target_name
 
-  local rlocation = require('rlocation')
+  local rlocation = require('rules_nvim.rlocation')
   local environment_root = rlocation.rlocation(runfile_dir)
 
   if not vim.fn.isdirectory(environment_root) then

@@ -51,13 +51,13 @@ nvim_lua_test = macro(
     attrs = {
         "entry_point": attr.label(
             allow_single_file = True,
-            default = "//nvim/lua/rules_nvim_test/runner:entry_point.lua",
+            default = "//nvim/lua/rules_nvim/test/runner:entry_point.lua",
         ),
         "runner_deps": attr.label_list(
             providers = [NvimLuaInfo],
             default = [
-                "//nvim/lua/rules_nvim_test/suite",
-                "//nvim/lua/rules_nvim_test/runner",
+                "//nvim/lua/rules_nvim/test/suite",
+                "//nvim/lua/rules_nvim/test/runner",
             ],
         ),
         "srcs": attr.label_list(

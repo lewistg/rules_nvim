@@ -21,7 +21,7 @@ nvim_lua_binary(
     ],
     entry_point = "read_data_file.lua",
     deps = [
-        "//nvim/lua/rlocation",
+        "//nvim/lua/rules_nvim/rlocation",
     ],
 )
 
