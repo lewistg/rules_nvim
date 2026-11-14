@@ -1,6 +1,5 @@
 load(":nvim_lua_executable.bzl", "nvim_lua_executable_rule")
 load(":nvim_lua_info.bzl", "NvimLuaInfo")
-load(":nvim_lua_path_root.bzl", "NvimLuaPathRoot")
 load(":rlocation_util.bzl", "get_rlocation_path")
 
 _internal_nvim_lua_test = nvim_lua_executable_rule(
@@ -26,7 +25,6 @@ def _nvim_lua_test_impl(
         name,
         entry_point,
         runner_deps,
-        runner_lua_path_roots,
         srcs,
         deps,
         **kwargs):
@@ -43,7 +41,6 @@ def _nvim_lua_test_impl(
             "entry_point": entry_point,
             "entry_point_args": ":" + args_name,
             "deps": runner_deps + deps,
-            "lua_path_roots": (kwargs.get("lua_path_roots") or []) + runner_lua_path_roots,
             "srcs": srcs,
         })
     )
@@ -61,12 +58,6 @@ nvim_lua_test = macro(
             default = [
                 "//nvim/lua/rules_nvim_test/suite",
                 "//nvim/lua/rules_nvim_test/runner",
-            ],
-        ),
-        "runner_lua_path_roots": attr.label_list(
-            providers = [NvimLuaPathRoot],
-            default = [
-                "//nvim/lua:lua_path_root",
             ],
         ),
         "srcs": attr.label_list(

@@ -1,5 +1,4 @@
 load(":nvim_lua_info.bzl", "NvimLuaInfo")
-load(":nvim_lua_path_root.bzl", "NvimLuaPathRoot")
 load(":rlocation_util.bzl", "get_rlocation_path")
 
 BASE_EXECUTABLE_RULE_ATTRS = {
@@ -9,9 +8,6 @@ BASE_EXECUTABLE_RULE_ATTRS = {
     ),
     "entry_point_args": attr.label(
         allow_single_file = True,
-    ),
-    "lua_path_roots": attr.label_list(
-        providers = [NvimLuaPathRoot],
     ),
     "srcs": attr.label_list(
         allow_files = [".lua"],
@@ -38,9 +34,13 @@ BASE_EXECUTABLE_RULE_ATTRS = {
 def _nvim_lua_executable_impl(ctx):
     entry_point_args = get_rlocation_path(ctx.file.entry_point_args) if ctx.file.entry_point_args else ""
 
+    lua_path_deps = depset(transitive = [
+        dep[NvimLuaInfo].lua_path_roots
+        for dep in ctx.attr.deps
+    ])
     lua_paths = [
-        target.label.repo_name or "_main" + "/" + target.label.package
-        for target in ctx.attr.lua_path_roots
+        (target.label.repo_name or "_main") + "/" + target.label.package
+        for target in lua_path_deps.to_list()
     ]
 
     runner = ctx.actions.declare_file(ctx.label.name + "_runner.sh")

@@ -20,9 +20,6 @@ nvim_lua_binary(
         "data.txt",
     ],
     entry_point = "read_data_file.lua",
-    lua_path_roots = [
-        "//nvim/lua:lua_path_root",
-    ],
     deps = [
         "//nvim/lua/rlocation",
     ],

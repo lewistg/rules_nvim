@@ -5,7 +5,8 @@ nvim_lua_library(
     srcs = [
         "init.lua",
     ],
+    lua_path_root = "//nvim/tests/nvim_plugin/foo.nvim/lua:lua_path_root",
     visibility = [
-        "//nvim/tests/nvim_plugin:__subpackages__"
-    ]
+        "//nvim/tests/nvim_plugin:__subpackages__",
+    ],
 )
