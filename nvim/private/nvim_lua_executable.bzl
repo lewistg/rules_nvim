@@ -22,10 +22,6 @@ BASE_EXECUTABLE_RULE_ATTRS = {
         allow_single_file = True,
         default = ":nvim_lua.sh.tpl",
     ),
-    "_nvim_bin": attr.label(
-        allow_single_file = True,
-        default = "@nvim//:bin/nvim",
-    ),
     "_runfiles_lib": attr.label(
         default = "@rules_shell//shell/runfiles",
     ),
@@ -43,12 +39,14 @@ def _nvim_lua_executable_impl(ctx):
         for target in lua_path_deps.to_list()
     ]
 
+    nvim_info = ctx.toolchains["//nvim/private/nvim_binary_toolchain:toolchain_type"].nvim_info
+
     runner = ctx.actions.declare_file(ctx.label.name + "_runner.sh")
     ctx.actions.expand_template(
         template = ctx.file._nvim_bin_runner_template,
         output = runner,
         substitutions = {
-            "{{NVIM_BIN}}": get_rlocation_path(ctx.file._nvim_bin),
+            "{{NVIM_BIN}}": get_rlocation_path(nvim_info.nvim_bin),
             "{{ENTRY_POINT}}": get_rlocation_path(ctx.file.entry_point),
             "{{ENTRY_POINT_ARGS}}": entry_point_args,
             "{{LUA_PATH_ROOTS}}": "\n".join(lua_paths),
@@ -59,7 +57,7 @@ def _nvim_lua_executable_impl(ctx):
 
     files = [
         ctx.file.entry_point,
-        ctx.file._nvim_bin,
+        nvim_info.nvim_bin,
     ] + ctx.files.srcs + ctx.files.data
     if ctx.file.entry_point_args:
         files.append(ctx.file.entry_point_args)
@@ -83,4 +81,7 @@ def nvim_lua_executable_rule(test = False):
         attrs = BASE_EXECUTABLE_RULE_ATTRS,
         executable = True,
         test = test,
+        toolchains = [
+            "//nvim/private/nvim_binary_toolchain:toolchain_type",
+        ],
     )

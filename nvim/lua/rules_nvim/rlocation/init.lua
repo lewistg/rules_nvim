@@ -59,6 +59,11 @@ function M.rlocation(path)
   return vim.fs.joinpath(RUNFILES_DIR, unpack(segments))
 end
 
+---@return string
+function M.get_nvim_bin()
+  M.location("rules_nvim/bin/nvim")
+end
+
 --- This method performs a "deep" copy of a runfile directory. This is useful
 --- if you have some runfile directory you would like to use as a test fixture,
 --- and you also need to write to that directory. It breaks hermeticity to
