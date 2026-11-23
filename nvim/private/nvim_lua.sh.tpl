@@ -52,6 +52,9 @@ for path in "${LUA_PATH_ROOTS[@]}"; do
     fi
 done
 
+export RULES_NVIM_NVIM_BIN="$NVIM_BIN"
+export RULES_NVIM_SOURCE_REPO="{{RULES_NVIM_SOURCE_REPO}}"
+
 "$NVIM_BIN" --clean \
     -l \
     "$ENTRY_POINT" \

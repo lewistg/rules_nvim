@@ -23,6 +23,9 @@ local function get_canonical_repo_name(key)
     }
     local lines = vim.fn.readfile(vim.fs.joinpath(RUNFILES_DIR, '_repo_mapping'))
     vim.iter(lines):each(function(line)
+      -- source_repo: The canonical name of the source repo
+      -- apparent_repo_name: The apparent name of the repo within the context of the source repo
+      -- canonical_repo_name: The canonical name of the repo name
       local source_repo, apparent_repo_name, canonical_repo_name = unpack(vim.split(line, ','))
 
       if source_repo == '' then
@@ -42,10 +45,11 @@ local function get_canonical_repo_name(key)
   return vim.tbl_get(REPO_MAPPING, key.source_repo, key.apparent_repo_name)
 end
 
+---@param path string
+---@param source_repo string | nil
 ---@return string
-function M.rlocation(path)
-  -- At the moment we only support getting runfiles from the main repo
-  local source_repo = '_main'
+function M.rlocation(path, source_repo)
+  source_repo = source_repo or '_main'
 
   local segments = vim.split(path, '/')
   local apparent_repo_name = segments[1]
@@ -61,7 +65,11 @@ end
 
 ---@return string
 function M.get_nvim_bin()
-  M.location("rules_nvim/bin/nvim")
+  local nvim_bin = os.getenv('RULES_NVIM_NVIM_BIN')
+  if nvim_bin == nil then
+    error('The RULES_NVIM_NVIM_BIN environment variable is not set')
+  end
+  return nvim_bin
 end
 
 --- This method performs a "deep" copy of a runfile directory. This is useful

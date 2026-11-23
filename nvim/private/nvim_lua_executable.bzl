@@ -28,6 +28,10 @@ BASE_EXECUTABLE_RULE_ATTRS = {
 }
 
 def _nvim_lua_executable_impl(ctx):
+    # We pick one of rules_nvim's internal source files to introspect and get
+    # rule_nvim's own canoncial name.
+    rules_nvim_canonical_repo_name = ctx.attr._nvim_bin_runner_template.label.repo_name
+
     entry_point_args = get_rlocation_path(ctx.file.entry_point_args) if ctx.file.entry_point_args else ""
 
     lua_path_deps = depset(transitive = [
@@ -50,6 +54,7 @@ def _nvim_lua_executable_impl(ctx):
             "{{ENTRY_POINT}}": get_rlocation_path(ctx.file.entry_point),
             "{{ENTRY_POINT_ARGS}}": entry_point_args,
             "{{LUA_PATH_ROOTS}}": "\n".join(lua_paths),
+            "{{RULES_NVIM_SOURCE_REPO}}": rules_nvim_canonical_repo_name,
         },
     )
 
